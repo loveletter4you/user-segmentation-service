@@ -34,9 +34,7 @@ func (server *HttpServer) Routes() {
 }
 
 func (server *HttpServer) StartServer(cfg *config.Config) error {
-	if err := server.controller.OpenConnection(cfg.Database.Host, cfg.Database.Port, cfg.Database.Username,
-		cfg.Database.Password, cfg.Database.Name,
-		cfg.DatabaseConnection.Attempts, cfg.DatabaseConnection.Timeout); err != nil {
+	if err := server.controller.OpenConnection(cfg); err != nil {
 		return err
 	}
 	server.Routes()

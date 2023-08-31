@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
+	"github.com/loveletter4you/user-segmentation-service/config"
 	"time"
 )
 
@@ -17,14 +18,14 @@ func NewStorage() *Storage {
 	return &Storage{}
 }
 
-func (s *Storage) Open(dbHost, dbPort, dbRoot, dbPassword, dbName string,
-	connectionAttempt, connectionTimeout int) error {
+func (s *Storage) Open(config *config.Config) error {
 	var (
 		db  *sql.DB
 		err error
 	)
-	dbUrl := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbRoot, dbPassword, dbHost, dbPort, dbName)
-	for connectionAttempt > 0 {
+	dbUrl := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", config.Database.Username,
+		config.Database.Password, config.Database.Host, config.Database.Port, config.Database.Name)
+	for config.DatabaseConnection.Attempts > 0 {
 		db, err = sql.Open("postgres", dbUrl)
 		if err != nil {
 			break
@@ -34,8 +35,8 @@ func (s *Storage) Open(dbHost, dbPort, dbRoot, dbPassword, dbName string,
 			s.db = db
 			break
 		}
-		time.Sleep(time.Duration(connectionTimeout) * time.Second)
-		connectionAttempt--
+		time.Sleep(time.Duration(config.DatabaseConnection.Timeout) * time.Second)
+		config.DatabaseConnection.Attempts--
 	}
 
 	return err

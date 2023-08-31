@@ -68,10 +68,11 @@ func (ctr *Controller) CreateSegment(c *gin.Context) {
 			return
 		}
 		ctr.storage.Segment().AutoCreateUserSegments(tx, users, segmentAutoInsert)
-		if err := tx.Commit(); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	c.JSON(http.StatusOK, segment)
 }

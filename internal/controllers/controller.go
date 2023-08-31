@@ -1,6 +1,9 @@
 package controllers
 
-import "github.com/loveletter4you/user-segmentation-service/internal/storage"
+import (
+	"github.com/loveletter4you/user-segmentation-service/config"
+	"github.com/loveletter4you/user-segmentation-service/internal/storage"
+)
 
 type Controller struct {
 	storage *storage.Storage
@@ -12,9 +15,8 @@ func NewController() *Controller {
 	}
 }
 
-func (ctr *Controller) OpenConnection(dbHost, dbPort, dbRoot, dbPassword, dbName string,
-	connectionAttempt, connectionTimeout int) error {
-	err := ctr.storage.Open(dbHost, dbPort, dbRoot, dbPassword, dbName, connectionAttempt, connectionTimeout)
+func (ctr *Controller) OpenConnection(config *config.Config) error {
+	err := ctr.storage.Open(config)
 	return err
 }
 
