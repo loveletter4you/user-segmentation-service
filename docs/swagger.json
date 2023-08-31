@@ -1,0 +1,275 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Api server dynamic user segments",
+        "title": "User segment app",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/",
+    "paths": {
+        "/segment": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "segments"
+                ],
+                "summary": "Create segment",
+                "parameters": [
+                    {
+                        "description": "create segment body",
+                        "name": "slug",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.segmentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Segment"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/segments": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "segments"
+                ],
+                "summary": "Get segments",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/user": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Create user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.User"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/user/{id}/report": {
+            "get": {
+                "description": "Get active user segments",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "segments"
+                ],
+                "summary": "Get month report",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "report month",
+                        "name": "month",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "report year",
+                        "name": "year",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/user/{id}/segments": {
+            "get": {
+                "description": "Get active user segments",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "segments"
+                ],
+                "summary": "Get user segments",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            },
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "segments"
+                ],
+                "summary": "Create segment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "create user segment body",
+                        "name": "appendSlugs",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.userSegmentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get users",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "controllers.segmentRequest": {
+            "type": "object",
+            "required": [
+                "slug"
+            ],
+            "properties": {
+                "percent": {
+                    "type": "integer"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "timeToLive": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controllers.userSegmentRequest": {
+            "type": "object",
+            "required": [
+                "appendSlugs",
+                "deleteSlugs"
+            ],
+            "properties": {
+                "appendSlugs": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "deleteSlugs": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "timeToLive": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.Segment": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "slug": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.User": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

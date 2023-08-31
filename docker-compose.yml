@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+
+  postgres:
+    container_name: postgres
+    image: postgres:15.4
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_ROOT}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    restart: unless-stopped
+
+  app:
+    container_name: app
+    build: .
+    volumes:
+      - ./static:/static
+    env_file:
+      - .env
+    ports:
+      - "${HTTP_PORT}:${HTTP_PORT}"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+volumes:
+  pg-data:

@@ -1,0 +1,6 @@
+Server:
+  Port: 8080
+
+DatabaseConnection:
+  Attempts: 20
+  Timeout: 1

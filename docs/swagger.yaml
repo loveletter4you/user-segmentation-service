@@ -1,0 +1,179 @@
+basePath: /api/
+definitions:
+  controllers.segmentRequest:
+    properties:
+      percent:
+        type: integer
+      slug:
+        type: string
+      timeToLive:
+        type: integer
+    required:
+    - slug
+    type: object
+  controllers.userSegmentRequest:
+    properties:
+      appendSlugs:
+        items:
+          type: string
+        type: array
+      deleteSlugs:
+        items:
+          type: string
+        type: array
+      timeToLive:
+        type: integer
+    required:
+    - appendSlugs
+    - deleteSlugs
+    type: object
+  model.Segment:
+    properties:
+      id:
+        type: integer
+      slug:
+        type: string
+    type: object
+  model.User:
+    properties:
+      id:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Api server dynamic user segments
+  title: User segment app
+  version: "1.0"
+paths:
+  /segment:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: create segment body
+        in: body
+        name: slug
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.segmentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Segment'
+        "400":
+          description: Bad Request
+      summary: Create segment
+      tags:
+      - segments
+  /segments:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      summary: Get segments
+      tags:
+      - segments
+  /user:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "500":
+          description: Internal Server Error
+      summary: Create user
+      tags:
+      - users
+  /user/{id}/report:
+    get:
+      description: Get active user segments
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: report month
+        in: query
+        name: month
+        required: true
+        type: integer
+      - description: report year
+        in: query
+        name: year
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      summary: Get month report
+      tags:
+      - segments
+  /user/{id}/segments:
+    get:
+      description: Get active user segments
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      summary: Get user segments
+      tags:
+      - segments
+    post:
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: create user segment body
+        in: body
+        name: appendSlugs
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.userSegmentRequest'
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+      summary: Create segment
+      tags:
+      - segments
+  /users:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Get users
+      tags:
+      - users
+swagger: "2.0"
